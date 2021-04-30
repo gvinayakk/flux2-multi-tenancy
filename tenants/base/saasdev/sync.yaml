@@ -1,0 +1,29 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: GitRepository
+metadata:
+  name: saasdev
+  namespace: hello-world
+spec:
+  interval: 1m0s
+  ref:
+    branch: flux
+  secretRef:
+    name: flux-system
+  url: ssh://git@bitbucket.corp.appdynamics.com:7999/saaseng/hello-world-service.git
+
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: saasdev
+  namespace: hello-world
+spec:
+  interval: 1m0s
+  path: ./infrastructure
+  prune: false
+  serviceAccountName: saasdev
+  sourceRef:
+    kind: GitRepository
+    name: saasdev
+
